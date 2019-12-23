@@ -5,15 +5,14 @@ import 'package:flutter_app/src/blocs/provaider.dart';
 import 'package:flutter_app/src/providers/usuario_provaider.dart';
 import 'package:flutter_app/src/utils/utils.dart' as utils;
 
-class LoginPage extends StatelessWidget {
-
+class RegistroPage extends StatelessWidget {
   final usuarioProvaider = new UsuarioProvaider();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
-        children: <Widget>[_crearFondo(context), _loginForm(context)],
+        children: <Widget>[_crearFondo(context), _registerForm(context)],
       ),
     );
   }
@@ -29,22 +28,9 @@ class LoginPage extends StatelessWidget {
             image: DecorationImage(
                 image: AssetImage('assets/img/back.jpg'), fit: BoxFit.cover)));
 
-    // final circulo = Container(
-    //   width: 100.0,
-    //   height: 100.0,
-    //   decoration: BoxDecoration(
-    //       borderRadius: BorderRadius.circular(100.0),
-    //       color: Color.fromRGBO(255, 255, 255, 0.2)),
-    // );
-
     return Stack(
       children: <Widget>[
         fondoMorado,
-        // Positioned(top: -20.0, left: -10.0, child: circulo),
-        // Positioned(top: -40.0, right: 30.0, child: circulo),
-        // Positioned(bottom: -50.0, right: -10.0, child: circulo),
-        // Positioned(bottom: 120.0, right: 20.0, child: circulo),
-        // Positioned(bottom: -50.0, left: -20.0, child: circulo),
         Container(
           padding: EdgeInsets.only(top: 50.0),
           child: Column(
@@ -64,7 +50,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _loginForm(BuildContext context) {
+  Widget _registerForm(BuildContext context) {
     final bloc = Provaider.of(context);
     final size = MediaQuery.of(context).size;
 
@@ -92,7 +78,7 @@ class LoginPage extends StatelessWidget {
                 ]),
             child: Column(
               children: <Widget>[
-                Text('Ingreso', style: TextStyle(fontSize: 20.0)),
+                Text('Registrar', style: TextStyle(fontSize: 20.0)),
                 SizedBox(height: 60.0),
                 _crearEmail(bloc),
                 SizedBox(height: 30.0),
@@ -103,8 +89,8 @@ class LoginPage extends StatelessWidget {
             ),
           ),
           FlatButton(
-            child: Text('Crear Cuenta'),
-            onPressed: () => Navigator.pushReplacementNamed(context, 'registro'),
+            child: Text('Iniciar Sesion'),
+            onPressed: () => Navigator.pushReplacementNamed(context, 'login'),
           ),
           SizedBox(height: 100.0)
         ],
@@ -156,27 +142,28 @@ class LoginPage extends StatelessWidget {
       stream: bloc.formValidStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return RaisedButton(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 10.0),
-            child: Text('Ingresar'),
-          ),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-          elevation: 0.0,
-          color: Color.fromRGBO(1, 111, 138, 1.0),
-          textColor: Colors.white,
-          onPressed: snapshot.hasData ? () => _login(bloc, context) : null
-        );
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 10.0),
+              child: Text('Ingresar'),
+            ),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0)),
+            elevation: 0.0,
+            color: Color.fromRGBO(1, 111, 138, 1.0),
+            textColor: Colors.white,
+            onPressed: snapshot.hasData ? () => _registro(bloc, context) : null);
       },
     );
   }
 
-  _login(LoginBloc bloc, BuildContext context) async {
-    Map info = await usuarioProvaider.loginUsaurio(bloc.email, bloc.password);
+  _registro(LoginBloc bloc, BuildContext context) async {
+    Map info = await usuarioProvaider.nuevoUsaurio(bloc.email, bloc.password);
+
     if (info['ok']) {
       Navigator.of(context).pushReplacementNamed('home');
     } else {
       utils.mostrarAlerta(context, info['mensaje']);
     }
+    // Navigator.of(context).pushReplacementNamed('home');
   }
 }
